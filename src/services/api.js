@@ -6,18 +6,12 @@ const base_Url = 'https://api.themoviedb.org/3'
 
 
 
- export const getpopularmovies = async ({pages}) =>{
+ export const getpopularmovies = async ({page}) =>{
 
-  const response = await fetch(`${base_Url}/movie/popular?api_key=${api_key}&page=${pages}`);
-  const data = await response.json();
-  
-  
-   console.log("popular");
-   console.log(pages);
-   
-   
-  
-   return data.results
+  const response = await fetch(`${base_Url}/movie/popular?api_key=${api_key}&page=${page}`);
+  const data = await response.json()
+   console.log(data.results);
+  return data.results
 
  };
 

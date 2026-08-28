@@ -3,7 +3,7 @@ import SearchBar from "./searchBar";
 
 const Navbar = () => {
   return (
-    <nav className="border-b border-white/10 bg-black/95 px-4 py-3 shadow-2xl shadow-black/40 backdrop-blur sm:px-8">
+    <nav className="border-b border-white/10 bg-black/95 px-4 py-4 shadow-2xl shadow-black/40 backdrop-blur sm:px-8">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-8 gap-y-3">
         <div className="shrink-0 text-2xl font-black tracking-[-0.06em] text-[#e50914] sm:text-3xl">
           <Link to="/">MOVIEFLIX</Link>

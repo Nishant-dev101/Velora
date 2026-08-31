@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import {
   getNowPlayingMovies,
   getPopularMovies,
-  getPopularTV,
   getTopRatedMovies,
   getTrendingMovies,
-} from "../services/api.js";
+} from "../services/movies.api";
+import { getPopularTV } from "../services/tvshows.api";
 import MovieRow from "../components/moviesRow.jsx";
+import Banner from "../components/Banner.jsx";
 
 function Home() {
   const [popular, setPopular] = useState([]);
@@ -71,21 +72,17 @@ function Home() {
         <div className="py-16 text-center text-slate-400">Loading...</div>
       ) : (
         <div className="space-y-10">
+          <Banner movies={trending} />
           <MovieRow movies={popular} title="Popular Movies" />
           <MovieRow movies={topRated} title="Top Rated Movies" />
-          <MovieRow movies={trending} title="Trending Movies" />
-          <MovieRow movies={nowPlaying} title="Now Playing" />
           <MovieRow movies={popularTV} title="Popular TV Shows" />
+          <MovieRow movies={trending} title="Trending Movies" />
+          <MovieRow movies={nowPlaying} title="In Theatres right now" />
         </div>
       )}
 
       <div className="flex justify-center pt-6">
-        <button
-          className="border border-white/40 px-6 py-3 text-sm font-semibold text-white transition hover:border-white hover:bg-white hover:text-black focus:outline-none focus:ring-2 focus:ring-[#e50914]"
-          onClick={handleLoadMore}
-        >
-          Load more
-        </button>
+        
       </div>
     </div>
   );

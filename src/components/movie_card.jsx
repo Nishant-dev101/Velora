@@ -1,9 +1,16 @@
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleFavorite } from "../store/features/favoritesSlice";
 
 const MovieCard = ({ movie }) => {
   const navigate = useNavigate();
-  const title = movie?.title ?? movie?.name ?? "Untitled";
-  const releaseDate = movie?.release_date ?? movie?.first_air_date ?? "Release date unavailable";
+  const title = movie?.title ?? "Untitled";
+  const releaseDate = movie?.release_date ?? "Release date unavailable";
+
+  const dispatch = useDispatch();
+  const favorites = useSelector((state) => state.favorites.movies);
+
+  const isFavorites = favorites.some((fav) => fav.id === movie.id);
 
   const handleOpenDetails = () => {
     if (movie?.id) {
@@ -11,22 +18,17 @@ const MovieCard = ({ movie }) => {
     }
   };
 
-  function onFavoriteClick(event) {
-    event.stopPropagation();
-    alert("Clicked");
-  }
+  const onFavoriteClick = (e) => {
+    e.stopPropagation();
+    dispatch(toggleFavorite(movie));
+    alert(`${title} ${isFavorites ? "removed from" : "added to"} favorites`);
+  };
 
   return (
     <article
       role="button"
       tabIndex={0}
       onClick={handleOpenDetails}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          handleOpenDetails();
-        }
-      }}
       className="group flex h-full w-full max-w-[220px] cursor-pointer flex-col overflow-hidden rounded-xl border border-white/5 bg-[#1f1f1f] shadow-[0_18px_40px_rgba(0,0,0,0.22)] transition-all duration-200 hover:-translate-y-1 hover:border-white/10 hover:bg-[#2a2a2a] focus:outline-none focus:ring-2 focus:ring-rose-500"
     >
       <div className="relative aspect-[2/3] w-full overflow-hidden bg-[#242424]">
@@ -44,10 +46,10 @@ const MovieCard = ({ movie }) => {
           <button
             type="button"
             aria-label={`Add ${title} to favorites`}
-            className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/50 text-xl text-white transition hover:bg-black/80 focus:outline-none focus:ring-2 focus:ring-rose-500"
+            className= {`absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/50 text-xl text-white transition hover:bg-black/80 focus:outline-none focus:ring-2 focus:ring-rose-500`}
             onClick={onFavoriteClick}
           >
-            🤍
+            {isFavorites ? "❤️" : "🤍"}
           </button>
         </div>
       </div>

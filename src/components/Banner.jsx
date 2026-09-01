@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toggleFavorite } from "../store/features/favoritesSlice";
 
-const Banner = ({ movies = [] }) => {
+const Banner = ({ movies }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const favorites = useSelector((state) => state.favorites.movies);
   const slides = movies.slice(0, 6);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -17,7 +23,15 @@ const Banner = ({ movies = [] }) => {
   if (!slides.length) return null;
 
   const currentMovie = slides[activeIndex];
-  
+  const movieTitle = currentMovie.title || currentMovie.name;
+  const rating = currentMovie.vote_average.toFixed(1);
+  const releaseYear = currentMovie.release_date.split("-")[0];
+  const overview =
+    currentMovie.overview.length > 180
+      ? `${currentMovie.overview.slice(0, 180)}...`
+      : currentMovie.overview;
+  const isFavorite = favorites.some((movie) => movie.id === currentMovie.id);
+
   const goToSlide = (direction) => {
     setActiveIndex((prev) => {
       if (direction === "next") {
@@ -28,35 +42,43 @@ const Banner = ({ movies = [] }) => {
     });
   };
 
-  const rating = currentMovie?.vote_average?.toFixed(1) ?? "0.0";
-  const releaseYear = currentMovie?.release_date?.split("-")[0] ?? currentMovie?.first_air_date?.split("-")[0] ?? "N/A";
-  const overview = currentMovie?.overview
-    ? currentMovie.overview.length > 180
-      ? `${currentMovie.overview.slice(0, 180)}...`
-      : currentMovie.overview
-    : "No overview available yet.";
+  const goToMovieDetails = () => {
+    navigate(`/movie/${currentMovie.id}`);
+  };
+
+  const handleFavoriteClick = () => {
+    dispatch(toggleFavorite(currentMovie));
+    alert(`${movieTitle} ${isFavorite ? "removed from" : "added to"} favorites`);
+  };
 
   return (
     <section className="relative mb-10 overflow-hidden rounded-b-[2rem] border-b border-sky-400/80 bg-black shadow-[0_25px_60px_rgba(0,0,0,0.45)]">
       <div className="relative h-[430px] overflow-hidden sm:h-[500px] lg:h-[650px]">
-        {slides.map((movie, index) => (
-          <div
-            key={movie.id}
-            className="absolute inset-0 transition-opacity duration-700 ease-in-out"
-            style={{ opacity: index === activeIndex ? 1 : 0, pointerEvents: index === activeIndex ? "auto" : "none" }}
-          >
-            <img
-              src={
-                movie.backdrop_path
-                  ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
-                  : "https://placehold.co/1600x900/111827/ffffff?text=Movie+Banner"
-              }
-              alt={movie.title ?? movie.name}
-              className="h-full w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.18),_transparent_25%),linear-gradient(90deg,rgba(0,0,0,0.88)_0%,rgba(0,0,0,0.72)_28%,rgba(0,0,0,0.4)_50%,rgba(0,0,0,0.7)_100%)]" />
-          </div>
-        ))}
+        {slides.map((movie, index) => {
+          const slideTitle = movie.title || movie.name || "Untitled";
+
+          return (
+            <div
+              key={movie.id}
+              className="absolute inset-0 transition-opacity duration-700 ease-in-out"
+              style={{
+                opacity: index === activeIndex ? 1 : 0,
+                pointerEvents: index === activeIndex ? "auto" : "none",
+              }}
+            >
+              <img
+                src={
+                  movie.backdrop_path
+                    ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
+                    : "https://placehold.co/1600x900/111827/ffffff?text=Movie+Banner"
+                }
+                alt={slideTitle}
+                className="h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.18),_transparent_25%),linear-gradient(90deg,rgba(0,0,0,0.88)_0%,rgba(0,0,0,0.72)_28%,rgba(0,0,0,0.4)_50%,rgba(0,0,0,0.7)_100%)]" />
+            </div>
+          );
+        })}
 
         <button
           type="button"
@@ -87,7 +109,7 @@ const Banner = ({ movies = [] }) => {
 
             <h1 className="text-4xl font-black uppercase tracking-[-0.06em] text-white sm:text-5xl lg:text-8xl lg:leading-[0.9]">
               <span className="block bg-gradient-to-r from-[#f5f5f5] via-[#f4c2c2] to-[#ffb347] bg-clip-text text-transparent">
-                {currentMovie.title ?? currentMovie.name}
+                {movieTitle}
               </span>
             </h1>
 
@@ -103,23 +125,23 @@ const Banner = ({ movies = [] }) => {
               </span>
             </div>
 
-            <p className="mt-5 max-w-lg text-sm leading-6 text-white/80 sm:text-base">
-              {overview}
-            </p>
+            <p className="mt-5 max-w-lg text-sm leading-6 text-white/80 sm:text-base">{overview}</p>
 
             <div className="mt-7 flex items-center gap-4">
               <button
                 type="button"
+                onClick={goToMovieDetails}
                 className="flex items-center justify-center rounded-xl bg-white px-6 py-3 text-sm font-semibold text-black transition hover:scale-[1.02] hover:bg-slate-200"
               >
                 ▶ Watch Now
               </button>
               <button
                 type="button"
-                className="flex h-12 w-12 items-center justify-center rounded-full border border-white/25 bg-black/20 text-2xl text-white transition hover:scale-105 hover:bg-black/40"
+                onClick={handleFavoriteClick}
+                className="rounded-xl border border-white/25 bg-black/25 px-4 py-3 text-sm font-semibold text-white transition hover:bg-black/40"
                 aria-label="Add to favorites"
               >
-                +
+                {isFavorite ? "♥ In favorites" : "♡ Add to favorites"}
               </button>
             </div>
           </div>

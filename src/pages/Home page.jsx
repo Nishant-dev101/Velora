@@ -52,13 +52,7 @@ function Home() {
   useEffect(() => {
     loadMovies();
   }, []);
-
-  const handleLoadMore = async () => {
-    const nextPage = page + 1;
-    const res = await getPopularMovies({ page: nextPage });
-    setPopular((prev) => [...prev, ...res]);
-    setPage(nextPage);
-  };
+  
 
   return (
     <div className="min-h-[calc(100vh-76px)] bg-[radial-gradient(circle_at_top_right,_rgba(229,9,20,0.12),_transparent_32rem)] py-8 sm:py-10">

@@ -38,7 +38,7 @@ const MovieRow = ({ movies, title }) => {
       <div className="mb-6 flex items-end justify-between border-b border-white/10 pb-4">
         <div>
           <p className="mb-1 text-xs font-bold uppercase tracking-[0.22em] text-[#e50914]">
-            Popular right now
+            stream
           </p>
           <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
             {title}

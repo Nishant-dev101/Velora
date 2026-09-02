@@ -2,6 +2,7 @@
 
 # Editor directories and files
 .vscode/*
+.env
 !.vscode/extensions.json
 .idea
 .DS_Store
@@ -43,7 +44,8 @@ yarn-integrity
 # Output of `npm pack`
 *.tgz
 # Local environment files
-env.local
-env.*.local
+.env
+.env.local
+.env.*.local
 # Coverage reports (if using testing tools like Jest)
 coverage/

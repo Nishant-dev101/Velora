@@ -1,11 +1,16 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SearchBar = () => {
 
         const [ searchQuery, setSerachQuery ] = useState("")
+        const navigate = useNavigate()
 
         const handleSearch = (event) => {
           event.preventDefault()
+          if(searchQuery.trim() == "") return
+           navigate(`/searchmovies/${searchQuery}`)
+           
          
     }
 

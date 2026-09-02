@@ -51,15 +51,19 @@ export const getMovieDetails = async (movieId) => {
   };
 };
 
-export const searchMovies = async ({ searchQuery, pages = 1 }) => {
+export const searchMovies = async ({ searchQuery, page = 1 }) => {
+  console.log(searchQuery, page);
+  
   const response = await fetch(
-    `${base_Url}/search/movie?api_key=${tmdbApiKey}&query=${encodeURIComponent(searchQuery)}&page=${pages}`
+    `${base_Url}/search/multi?api_key=${tmdbApiKey}&query=${encodeURIComponent(searchQuery)}&page=${page}`
   );
   if (!response.ok) {
     throw new Error(`TMDB request failed: ${response.status}`);
   }
   const data = await response.json();
+  console.log(data)
   return data.results ?? [];
 };
 
 export const searchmovies = searchMovies;
+ 

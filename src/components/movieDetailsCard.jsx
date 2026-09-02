@@ -61,10 +61,7 @@ const MovieDetailsCard = ({
     .slice(0, 6);
   const reviews = movie.reviews.slice(0, 3);
   const images = movie.images.backdrops.slice(0, 6);
-  const providerList = useMemo(
-    () => getPlatformList(movie.providers),
-    [movie.providers],
-  );
+  const providerList = getPlatformList(movie.providers);
 
   const releaseYear = movie.release_date
     ? new Date(movie.release_date).getFullYear()

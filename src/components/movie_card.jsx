@@ -4,7 +4,7 @@ import { toggleFavorite } from "../store/features/favoritesSlice";
 
 const MovieCard = ({ movie }) => {
   const navigate = useNavigate();
-  const title = movie?.title ?? "Untitled";
+  const title = movie?.title ?? movie.name ?? "Untitled";
   const releaseDate = movie?.release_date ?? "Release date unavailable";
 
   const dispatch = useDispatch();

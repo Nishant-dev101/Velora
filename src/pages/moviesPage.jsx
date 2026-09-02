@@ -23,6 +23,7 @@ const MoviesPage = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState(null);
+  const [showBackToTop, setShowBackToTop] = useState(false);
   const isFetchingRef = useRef(false);
 
   const selectedCategory = categories.find((category) => category.key === selected) ?? categories[0];
@@ -68,6 +69,7 @@ const MoviesPage = () => {
 
   useEffect(() => {
     const onScroll = () => {
+      setShowBackToTop(window.scrollY > 500);
       if (loading || !hasMore) return;
 
       const reachedBottom =
@@ -81,6 +83,10 @@ const MoviesPage = () => {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, [loading, hasMore, page, selectedCategory.key]);
+
+  const handleBackToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <section className="min-h-[calc(100vh-76px)] bg-[radial-gradient(circle_at_top_right,_rgba(229,9,20,0.18),_transparent_30rem)] py-8 sm:py-10">
@@ -132,6 +138,18 @@ const MoviesPage = () => {
         <div className="flex justify-center pb-8 text-sm text-gray-400">
           Loading more movies...
         </div>
+      )}
+
+      {showBackToTop && (
+        <button
+          type="button"
+          onClick={handleBackToTop}
+          aria-label="Back to top"
+          title="Back to top"
+          className="fixed bottom-6 right-5 z-10 rounded-full border border-white/20 bg-[#e50914] px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-black/40 transition hover:bg-[#f6121d] focus:outline-none focus:ring-2 focus:ring-rose-300 sm:bottom-8 sm:right-8"
+        >
+          Back to top
+        </button>
       )}
     </section>
   );
